@@ -1,4 +1,4 @@
-cat << 'EOF' > README.md
+
 # 🛠️ DevOps Auto-Deployment Assistant
 
 A smart Node.js-based tool by **Shon Gaikwad** to **auto-deploy full-stack apps** from any GitHub repo to an AWS EC2 instance via SSH. Supports detection and deployment of React, Angular, Express, Flask, Django, PHP, Spring Boot projects and more.
@@ -146,4 +146,4 @@ Created by **Shon Gaikwad**
 📧 Email: [shongaikwad10169@gmail.com](mailto:shongaikwad10169@gmail.com)
 
 GitHub: [https://github.com/hackersnake](https://github.com/hackersnake)
-EOF
+
