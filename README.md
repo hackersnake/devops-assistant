@@ -1,152 +1,149 @@
-# devops-assistant
 cat << 'EOF' > README.md
 # 🛠️ DevOps Auto-Deployment Assistant
 
-This project is a smart Node.js-based tool to **auto-deploy full-stack applications** from any public or private GitHub repository directly to an AWS EC2 instance via SSH. It supports detection and deployment of popular tech stacks like React, Angular, Express, Flask, Django, PHP, Spring Boot, and more.
+A smart Node.js-based tool by **Shon Gaikwad** to **auto-deploy full-stack apps** from any GitHub repo to an AWS EC2 instance via SSH. Supports detection and deployment of React, Angular, Express, Flask, Django, PHP, Spring Boot projects and more.
+
+GitHub Repo: [https://github.com/hackersnake/devops-assistant](https://github.com/hackersnake/devops-assistant)
+
+---
 
 ## ✨ Features
 
 - ✅ Auto-detects tech stack from GitHub repo
 - 📦 Installs required dependencies (Node.js, Java, Python, etc.)
-- 🌐 Deploys project on a dynamic port and returns a live URL
-- 🧠 Uses AI to recommend ideal EC2 system requirements
-- 📡 Real-time Server-Sent Events (SSE) deployment logs
-- 🔐 SSH-based secure connection to EC2
-- ⚙️ Supports public and private GitHub repositories
+- 🌐 Deploys project on dynamic ports and returns live URL
+- 🧠 AI suggests system requirements (RAM, CPU, EC2 type)
+- 📡 Real-time deployment logs using SSE
+- 🔐 Secure SSH-based deployment
+- ⚙️ Works with both public and private GitHub links
+
+---
 
 ## 🧰 Tech Stack
 
 - Backend: Node.js + Express
-- SSH: \`ssh2\` npm package
-- AI Integration: OpenRouter API (DeepSeek model)
-- Real-time Logs: Server-Sent Events (SSE)
+- SSH Handling: ssh2
+- Logs: Server-Sent Events (SSE)
+- AI: OpenRouter DeepSeek model
 - Cloud: AWS EC2 (Ubuntu)
-- Script Detection: Custom bash logic + Node.js
+- Bash Scripts: Auto detect & deploy logic
+
+---
 
 ## 🚀 Supported Tech Stacks
 
-- React (Vite or CRA)
+- React (Vite / CRA)
 - Angular
-- Node.js with Express
-- Flask (Python)
-- Django (Python)
-- PHP (Apache2)
-- Spring Boot (Java Maven)
+- Node.js + Express
+- Flask
+- Django
+- PHP (Apache)
+- Spring Boot (Java + Maven)
 
 ---
 
 ## ⚙️ Prerequisites
 
-- Node.js and npm installed
-- An AWS EC2 instance (Ubuntu) with:
+- Node.js and npm
+- An AWS EC2 Ubuntu instance with:
   - Port 22 (SSH) open
-  - Your \`.pem\` key
-- GitHub repo with one of the supported tech stacks
+  - `.pem` key downloaded
+- GitHub repo link (public or private)
 
 ---
 
-## 🔧 Setup
+## 🔧 Setup Instructions
 
 1. **Clone the Repository**
 
 \`\`\`bash
-git clone https://github.com/your-username/devops-assistant.git
+git clone https://github.com/hackersnake/devops-assistant.git
 cd devops-assistant
 \`\`\`
 
-2. **Install Dependencies**
+2. **Install Node Modules**
 
 \`\`\`bash
 npm install
 \`\`\`
 
-3. **Configure Environment Variables**
-
-Create a \`.env\` file in the root directory:
+3. **Create `.env` File**
 
 \`\`\`env
 EC2_IP=your-ec2-ip
-PRIVATE_KEY_PATH=C:\\Users\\your-name\\Downloads\\KeyFile.pem
+PRIVATE_KEY_PATH=C:\\Users\\shong\\Downloads\\KeyFile.pem
 OPENROUTER_API_KEY=Bearer your_openrouter_api_key
 \`\`\`
 
----
-
-## 🖥️ Run the App
+4. **Start the Server**
 
 \`\`\`bash
 node index.js
 \`\`\`
 
-Now visit: [http://localhost:5000](http://localhost:5000)
+Then open [http://localhost:5000](http://localhost:5000) in your browser.
 
 ---
 
-## 📤 How to Deploy a Project
+## 📤 How to Deploy
 
-1. Enter a **GitHub repository link** (e.g., \`https://github.com/username/myapp\`)
+1. Enter your GitHub repo link (e.g., https://github.com/user/project)
 2. Click **Deploy**
-3. Watch live progress logs from:
-   - SSH connection
-   - Tech stack detection
-   - Dependency installation
-   - Build & run logs
-4. ✅ You’ll get a **Live EC2 URL** like:
+3. Watch live logs in browser
+4. ✅ Final output shows your deployed app link like:
    \`\`\`
    http://<your-ec2-ip>:3000
    \`\`\`
 
 ---
 
-## 📄 Folder Structure
+## 📄 Project Structure
 
 \`\`\`
 .
-├── index.js             // Main server and deployment logic
-├── Algo.js              // (Optional) Custom logic or utilities
-├── index.html           // Frontend input page
-├── public/              // Static files if needed
-├── .env                 // Environment variables
-├── README.md            // You're here
+├── index.js         # Main backend + deployment logic
+├── Algo.js          # Extra algorithms/utilities
+├── index.html       # UI for input
+├── public/          # Static files (optional)
+├── .env             # Environment config
+└── README.md        # This file
 \`\`\`
 
 ---
 
-## 🧠 AI Recommendation Example
+## 🧠 Sample AI Recommendation
 
 \`\`\`
 🤖 AI Recommendation:
 - CPU: 2 cores
 - RAM: 2 GB
 - Disk: 10 GB
-- Recommended Instance: t2.medium
+- Suggested Instance: t2.medium
 \`\`\`
 
 ---
 
-## ❗ Notes
+## 📝 Notes
 
-- **Port Range** used: \`3000–3010\`
-- Spring Boot JARs are built using Maven automatically
-- PHP projects are hosted via Apache2
-- Flask/Django use \`venv\` and are auto-started with \`nohup\`
-- Logs are streamed using SSE to the browser
+- Uses dynamic ports (3000–3010)
+- Java Spring Boot auto builds `.jar` with Maven
+- Flask/Django apps run via `venv + nohup`
+- Logs streamed using Server-Sent Events (SSE)
+- PHP apps served via Apache2
 
 ---
 
 ## 📜 License
 
-MIT License — free to use and modify!
+MIT License — free for use and modification
 
 ---
 
-## 🤝 Contribution
+## 🤝 Author & Contact
 
-Feel free to fork and contribute via pull requests!
+Created by **Shon Gaikwad**
 
----
+📧 Email: [shongaikwad10169@gmail.com](mailto:shongaikwad10169@gmail.com)
 
-## 📬 Contact
-
-For queries or support, email: \`your.email@example.com\`
+GitHub: [https://github.com/hackersnake](https://github.com/hackersnake)
 EOF
