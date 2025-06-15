@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Auto Deploy Service</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f1f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+      }
+
+      .container {
+        background: #ffffff;
+        width: 95%;
+        max-width: 600px;
+        margin-top: 60px;
+        margin-left: 10px;
+        padding: 30px 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        margin-top: 0;
+        color: #2c3e50;
+        font-size: 28px;
+        text-align: center;
+      }
+
+      label {
+        display: block;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #555;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        transition: border-color 0.2s ease;
+      }
+
+      input[type="text"]:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:disabled {
+        background-color: #a5c9f1;
+        cursor: not-allowed;
+      }
+
+      button:hover:enabled {
+        background-color: #0056b3;
+      }
+
+      #terminal {
+        background: #0f111a;
+        color: #00ff94;
+        font-family: monospace;
+        padding: 15px;
+        margin-top: 25px;
+        border-radius: 6px;
+        height: 300px;
+        overflow-y: auto;
+        font-size: 14px;
+        line-height: 1.5;
+        display: none;
+      }
+
+      #deployedUrl {
+        display: none;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 16px;
+      }
+
+      #deployedUrl a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      #deployedUrl a:hover {
+        text-decoration: underline;
+      }
+
+      .footer {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 13px;
+        color: #999;
+      }
+
+      @media (max-width: 500px) {
+        h1 {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex; flex-direction: column">
+      <div>
+        <img
+          src="header.png"
+          style="
+            height: 200px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 12px;
+          "
+        />
+      </div>
+      <div class="container">
+        <h1>🚀 Auto Deploy from GitHub</h1>
+        <label for="githubLink">GitHub Repository URL</label>
+        <input
+          type="text"
+          id="githubLink"
+          placeholder="e.g. https://github.com/user/project"
+        />
+        <button id="deployBtn" onclick="startDeployment()">
+          Start Deployment
+        </button>
+
+        <div id="terminal"></div>
+
+        <div
+          id="deployedUrl"
+          style="
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+            background: #e7f4ff;
+            padding: 12px;
+            border-radius: 6px;
+            color: #004085;
+            border: 1px solid #b8daff;
+          "
+        ></div>
+        <div
+          id="aiRecommendation"
+          style="
+            display: none;
+            margin-top: 25px;
+            background: #fff8e1;
+            padding: 15px;
+            border-left: 5px solid #ffc107;
+            border-radius: 6px;
+            color: #6b4b00;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+          "
+        ></div>
+      </div>
+      <div class="footer">BE Final Year Project | 2025</div>
+    </div>
+
+    <script>
+      let eventSource;
+
+      window.onload = () => {
+        eventSource = new EventSource("/deploy-progress");
+
+        const terminal = document.getElementById("terminal");
+        const urlDisplay = document.getElementById("deployedUrl");
+        const aiDiv = document.getElementById("aiRecommendation");
+        const deployBtn = document.getElementById("deployBtn");
+
+        eventSource.onmessage = (e) => {
+          const lines = e.data.split("\n"); // Split by newline
+
+          lines.forEach((line) => {
+            if (line.trim() === "") return;
+
+            // 🤖 Check for AI Recommendation
+            if (line.startsWith("🤖 AI Recommendation:")) {
+              const aiText = line.replace("🤖 AI Recommendation:", "").trim();
+              aiDiv.innerHTML = marked.parse(aiText);
+              aiDiv.style.display = "block";
+            }
+            // 🌐 Check for app deployment link
+            else if (line.includes("Application running at: http")) {
+              const url = line.split("Application running at: ")[1].trim();
+              urlDisplay.innerHTML = `
+            <p>🌐 <strong>Your app is live at:</strong></p>
+            <a href="${url}" target="_blank">${url}</a>
+          `;
+              urlDisplay.style.display = "block";
+
+              deployBtn.disabled = false;
+              deployBtn.textContent = "Start Deployment";
+
+              eventSource.close(); // Close SSE connection
+            }
+            // 📜 All other logs go to terminal
+            else {
+              const div = document.createElement("div");
+              div.textContent = line;
+              terminal.appendChild(div);
+            }
+          });
+
+          terminal.scrollTop = terminal.scrollHeight;
+        };
+
+        eventSource.onerror = () => {
+          terminal.innerHTML += `<div style="color:red">❌ Connection error. Please refresh the page.</div>`;
+          deployBtn.disabled = false;
+          deployBtn.textContent = "Start Deployment";
+          eventSource.close();
+        };
+      };
+
+      function startDeployment() {
+        const link = document.getElementById("githubLink").value.trim();
+        const terminal = document.getElementById("terminal");
+        const urlDisplay = document.getElementById("deployedUrl");
+        const aiDiv = document.getElementById("aiRecommendation");
+        const deployBtn = document.getElementById("deployBtn");
+
+        if (!link) {
+          alert("Please enter a valid GitHub repository URL.");
+          return;
+        }
+
+        // Reset UI state
+        terminal.innerHTML = "<div>🟢 Starting deployment...</div>";
+        terminal.style.display = "block";
+
+        urlDisplay.innerHTML = "";
+        urlDisplay.style.display = "none";
+
+        aiDiv.innerHTML = "";
+        aiDiv.style.display = "none";
+
+        deployBtn.disabled = true;
+        deployBtn.textContent = "Deploying...";
+
+        // Send request to backend
+        fetch("/deploy", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ githubLink: link }),
+        });
+      }
+    </script>
+  </body>
+</html>
